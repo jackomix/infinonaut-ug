@@ -2,7 +2,7 @@
 numDimensions = 10
 
 
-// Runs when the "Generate Universe" button is hit
+// Begins universe generation. Runs when the "Generate Universe" button is hit
 function begin() {
     console.log("Beginning generation...")
 
@@ -25,7 +25,7 @@ function begin() {
 }
 
 
-// Begin to generate dimensions
+// Generate and insert a dimension into the given datapack zip
 function generateDimension(zip, name) {
     console.log()
 }
