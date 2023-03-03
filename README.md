@@ -1,1 +1,1 @@
-# Infinonaut - Universe Generator
+# Infinonaut: Universe Generator
