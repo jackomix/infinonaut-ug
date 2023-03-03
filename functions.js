@@ -1,9 +1,11 @@
+// rn - random number
 // Generate a random number in a given range
 // https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
 function rn(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
   }
 
+// rb - random biased number
 // Generates a random number in a given range, but is biased towards a certain number with a configurable amount.
 // https://stackoverflow.com/questions/29325069/how-to-generate-random-numbers-biased-towards-one-value-in-a-range
 function rb(min, max, bias, influence) {
@@ -20,7 +22,6 @@ function nameGen(syllables, history) {
         for (var i = 0; i < syllables; i++) {
             nameGenResult += nameGenPairs[rn(0, nameGenPairs.length)]
         }
-        console.log(nameGenResult)
     }
     while (history.includes(nameGenResult))
     history.push(nameGenResult)
