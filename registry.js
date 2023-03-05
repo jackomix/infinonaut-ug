@@ -4,6 +4,10 @@ registry = {
   "namespace": "infinonaut",
   "numDimensions": 10,
   "numBiomes": [2, 5, 3, 0.75],
+  "biome": {
+    "depth": [-2, 3, 0.5, 0.9, 3],
+    "scale": [0, 3, 0.025, 0.7, 3],
+  },
   "mobs": {
     "peaceful": [
       //"minecraft:ash",

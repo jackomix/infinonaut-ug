@@ -68,7 +68,19 @@ function generateBiome(zip, dimensionProperties) {
     // Copy the biome template object onto the object we'll be editing
     biome = biomeBase
 
+    // Biome Terrain
+    biome.depth = registry.biome.depth
+    biome.scale = registry.biome.scale
+
+    // Colors
+    biome.effects.sky_color = dimensionProperties.skyColor
+    biome.effects.fog_color = dimensionProperties.fogColor
+
+    biome.effects.water_color = dimensionProperties.waterColor
+    biome.effects.water_fog_color = dimensionProperties.waterFogColor
     
+    biome.effects.grass_color = convertColorToMC(randomColor)
+    biome.effects.foliage_color = convertColorToMC(randomColor)
 
     // Adds the biome to the zip file provided
     zip.folder("data").folder(registry.namepsace).folder("worldgen").folder("biome").file(dimensionProperties.dimensionName + "_" + biomeName + ".json", JSON.stringify(biome));

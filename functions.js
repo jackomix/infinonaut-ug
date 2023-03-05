@@ -1,23 +1,30 @@
 // rn - random number
 // Generate a random number in a given range
 // https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
-function rn(min, max) {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
-  }
+function rn(min, max, dec = 0) {
+  var num = (Math.random() * (max - min) + min).toFixed(dec);
+  if (dec == 0) return parseInt(num);
+  else return parseFloat(num);
+}
 
 // rb - random biased number
 // Generates a random number in a given range, but is biased towards a certain number with a configurable amount.
 // https://stackoverflow.com/questions/29325069/how-to-generate-random-numbers-biased-towards-one-value-in-a-range
-function rb(min, max, bias, influence) {
+function rb(min, max, bias, influence, dec = 0) {
   var rnd = Math.random() * (max - min) + min,
     mix = Math.random() * influence;
-  return rnd * (1 - mix) + bias * mix;
+  if (dec == 0) return parseInt((rnd * (1 - mix) + bias * mix).toFixed(dec)).clamp(min, max);
+  else return parseFloat((rnd * (1 - mix) + bias * mix).toFixed(dec));
 }
 
 // rbArray - random biased number using inputs in an array
 // Used for easily processing random biased number values set in the registry.
 function rbArray(array) {
-  return rb(array[0], array[1], array[2], array[3])
+  if (typeof array[4] === 'undefined') { 
+    return rb(array[0], array[1], array[2], array[3]) 
+  } else {
+    return rb(array[0], array[1], array[2], array[3], array[4])
+  }
 }
 
 // Generates a random weird name, checking the name in the given history array to see if the name already exists (and thus should be regenerated).
@@ -41,7 +48,7 @@ function convertColorToMC(color) {
 }
 
 // Brightens or darkens colors
-// https://stackoverflow.com/questions/3426404/create-a-hexadecimal-colour-based-on-a-string-with-javascript
+// https://stackoverflow.com/questions/5560248/programmatically-lighten-or-darken-a-hex-color-or-rgb-and-blend-colors
 const changeBrightness=(p,c0,c1,l)=>{
   let r,g,b,P,f,t,h,i=parseInt,m=Math.round,a=typeof(c1)=="string";
   if(typeof(p)!="number"||p<-1||p>1||typeof(c0)!="string"||(c0[0]!='r'&&c0[0]!='#')||(c1&&!a))return null;
