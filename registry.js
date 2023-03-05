@@ -1,8 +1,10 @@
-// This big JSON object contains a list of elements to choose from.
+// This big JSON object contains configurable variables, and list of elements for the system to use during generation.
 
 registry = {
-  mobs: {
-    peaceful: [
+  "numDimensions": 10,
+  "numBiomes": [2, 5, 3, 0.75],
+  "mobs": {
+    "peaceful": [
       //"minecraft:ash",
       "minecraft:bat",
       "minecraft:cat",
@@ -26,7 +28,7 @@ registry = {
       //"minecraft:white_ash",
       "minecraft:wolf",
     ],
-    water: [
+    "water": [
       "minecraft:axolotl",
       "minecraft:cod",
       "minecraft:dolphin",
@@ -37,7 +39,7 @@ registry = {
       "minecraft:salmon",
       "minecraft:tropical_fish",
     ],
-    harmful: [
+    "harmful": [
       "minecraft:drowned",
       "minecraft:enderman",
       //"minecraft:hoglin",
@@ -54,7 +56,7 @@ registry = {
       //"minecraft:vindicator",
     ],
   },
-  surfaces: [
+  "surfaces": [
     "minecraft:badlands",
     //"minecraft:basalt_deltas",
     //"minecraft:crimson_forest",
