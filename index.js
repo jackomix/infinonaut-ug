@@ -19,13 +19,11 @@ function begin() {
         generateDimension(datapack, dimensionNameHistory)
     }
 
-    /*
     // Export the .zip
     datapack.generateAsync({type:"blob"})
     .then(function(blob) {
         saveAs(blob, universeName + " universe.zip")
     });
-    */
 }
 
 
@@ -36,6 +34,9 @@ function generateDimension(zip, nameHistory) {
 
     // Set the dimension's name
     dimensionProperties.dimensionName = nameGen(rb(1, 4, 2, 0.65), nameHistory)
+    
+    // Make a name history array for the dimension to prevent repeating biome names
+    dimensionProperties.biomeNameHistory = []
 
     // Generate a base color for sky color, then set it to the sky and fog color. We also increase the brightness for the fog color.
     baseSkyColor = randomColor()
@@ -46,9 +47,6 @@ function generateDimension(zip, nameHistory) {
     baseWaterColor = randomColor()
     dimensionProperties.waterColor = convertColorToMC(baseWaterColor)
     dimensionProperties.waterFogColor = convertColorToMC(changeBrightness(-0.25, baseWaterColor))
-
-    // Make a name history array for the dimension to prevent repeating biome names
-    dimensionProperties.nameHistory = []
 
     // Decide how many biomes to generate and begin to generate them
     numBiomes = rbArray(registry.numBiomes)
@@ -65,10 +63,12 @@ function generateDimension(zip, nameHistory) {
 
 function generateBiome(zip, dimensionProperties) {
     // Generate a name for the biome
-    biomeName = nameGen(rb(1, 4, 2, 0.65), dimensionProperties.nameHistory)
+    biomeName = nameGen(rb(1, 4, 2, 0.65), dimensionProperties.biomeNameHistory)
 
     // Copy the biome template object onto the object we'll be editing
     biome = biomeBase
+
+    
 
     // Adds the biome to the zip file provided
     zip.folder("data").folder(registry.namepsace).folder("worldgen").folder("biome").file(dimensionProperties.dimensionName + "_" + biomeName + ".json", JSON.stringify(biome));
