@@ -1,29 +1,44 @@
 // rn - random number
 // Generate a random number in a given range
 // https://stackoverflow.com/questions/1527803/generating-random-whole-numbers-in-javascript-in-a-specific-range
-function rn(min, max, dec = 0) {
-  var num = (Math.random() * (max - min) + min).toFixed(dec);
-  if (dec == 0) return parseInt(num);
-  else return parseFloat(num);
+function randomNumber(min, max, dec = 0) {
+  var num = (Math.random() * (max - min) + min).toFixed(dec)
+  if (dec == 0) return parseInt(num)
+  else return parseFloat(num)
 }
 
 // rb - random biased number
 // Generates a random number in a given range, but is biased towards a certain number with a configurable amount.
 // https://stackoverflow.com/questions/29325069/how-to-generate-random-numbers-biased-towards-one-value-in-a-range
-function rb(min, max, bias, influence, dec = 0) {
+function randomBiasedNumber(min, max, bias, influence, dec = 0) {
   var rnd = Math.random() * (max - min) + min,
-    mix = Math.random() * influence;
-  if (dec == 0) return parseInt((rnd * (1 - mix) + bias * mix).toFixed(dec)).clamp(min, max);
-  else return parseFloat((rnd * (1 - mix) + bias * mix).toFixed(dec));
+    mix = Math.random() * influence
+  if (dec == 0) return Math.min(Math.max(parseInt((rnd * (1 - mix) + bias * mix).toFixed(dec)),min),max)
+  else return parseFloat((rnd * (1 - mix) + bias * mix).toFixed(dec))
 }
 
-// rbArray - random biased number using inputs in an array
-// Used for easily processing random biased number values set in the registry.
-function rbArray(array) {
-  if (typeof array[4] === 'undefined') { 
-    return rb(array[0], array[1], array[2], array[3]) 
-  } else {
-    return rb(array[0], array[1], array[2], array[3], array[4])
+// regValue - registry number processing
+// Checks if registry option is a number, random number, or random biased number.
+// Then, returns the computed output.
+function regValue(registryValue) {
+  if (Array.isArray(registryValue)) { // Check if registryValue is an array, if so then it's either random number or random biased number.
+    if (typeof registryValue[2] === 'undefined') { 
+      // Random number without decimal parameter
+      return randomNumber(registryValue[0], registryValue[1])
+    } else if (typeof registryValue[3] === 'undefined') {
+      // Random number with decimal parameter
+      return randomNumber(registryValue[0], registryValue[1], registryValue[2])
+
+    } else if (typeof registryValue[4] === 'undefined') {
+      // Random biased number without decimal parameter
+      return randomBiasedNumber(registryValue[0], registryValue[1], registryValue[2], registryValue[3])
+
+    } else {
+      // Random biased number with decimal parameter
+      return randomBiasedNumber(registryValue[0], registryValue[1], registryValue[2], registryValue[3], registryValue[4])
+    }
+  } else { // If registryValue is not an array, then it's probably just some number or string, so no need to compute it.
+    return registryValue
   }
 }
 
@@ -32,8 +47,8 @@ function nameGen(syllables, history) {
     do {
         nameGenPairs = ["ab","ac","ad","af","ag","ah","aj","ak","al","am","an","ap","aq","ar","as","at","av","aw","ax","ay","az","ba","ca","da","fa","ga","ha","ja","ka","la","ma","na","pa","qa","ra","sa","ta","va","wa","xa","ya","za","eb","ec","ed","ef","eg","eh","ej","ek","el","em","en","ep","eq","er","es","et","ev","ew","ex","ey","ez","be","ce","de","fe","ge","he","je","ke","le","me","ne","pe","qe","re","se","te","ve","we","xe","ye","ze","ib","ic","id","if","ig","ih","ij","ik","il","im","in","ip","iq","ir","is","it","iv","iw","ix","iy","iz","bi","ci","di","fi","gi","hi","ji","ki","li","mi","ni","pi","qi","ri","si","ti","vi","wi","xi","yi","zi","ob","oc","od","of","og","oh","oj","ok","ol","om","on","op","oq","or","os","ot","ov","ow","ox","oy","oz","bo","co","do","fo","go","ho","jo","ko","lo","mo","no","po","qo","ro","so","to","vo","wo","xo","yo","zo","ub","uc","ud","uf","ug","uh","uj","uk","ul","um","un","up","uq","ur","us","ut","uv","uw","ux","uy","uz","bu","cu","du","fu","gu","hu","ju","ku","lu","mu","nu","pu","qu","ru","su","tu","vu","wu","xu","yu","zu"];
         nameGenResult = ""
-        for (var i = 1; i < syllables; i++) {
-            nameGenResult += nameGenPairs[rn(0, nameGenPairs.length)]
+        for (var i = 0; i < syllables; i++) {
+            nameGenResult += nameGenPairs[randomNumber(0, nameGenPairs.length - 1)]
         }
     }
     while (history.includes(nameGenResult))

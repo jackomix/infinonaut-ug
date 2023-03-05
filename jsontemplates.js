@@ -81,16 +81,7 @@ dimensionBase = {
         amplitudes: [1, 1],
       },
       biomes: [
-        {
-          biome: "minecraft:plains",
-          parameters: {
-            altitude: 0,
-            temperature: 0,
-            humidity: 0,
-            weirdness: 0,
-            offset: 0,
-          },
-        },
+
       ],
     },
   },

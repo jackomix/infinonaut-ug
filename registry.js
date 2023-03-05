@@ -1,15 +1,22 @@
 // This big JSON object contains configurable variables, and list of elements for the system to use during generation.
 
 registry = {
-  "namespace": "infinonaut",
-  "numDimensions": 10,
-  "numBiomes": [2, 5, 3, 0.75],
-  "biome": {
-    "depth": [-2, 3, 0.5, 0.9, 3],
-    "scale": [0, 3, 0.025, 0.7, 3],
+  namespace: "infinonaut",
+  numDimensions: 10,
+  numBiomes: [2, 5, 3, 0.75],
+  biome: {
+    depth: [-2, 3, 0.5, 0.9, 3],
+    scale: [0, 3, 0.025, 0.7, 3],
+    spawning: {
+      altitude: 0,
+      temperature: 0,
+      humidity: 0,
+      weirdness: 0,
+      offset: 0,
+    },
   },
-  "mobs": {
-    "peaceful": [
+  mobs: {
+    peaceful: [
       //"minecraft:ash",
       "minecraft:bat",
       "minecraft:cat",
@@ -33,7 +40,7 @@ registry = {
       //"minecraft:white_ash",
       "minecraft:wolf",
     ],
-    "water": [
+    water: [
       "minecraft:axolotl",
       "minecraft:cod",
       "minecraft:dolphin",
@@ -44,7 +51,7 @@ registry = {
       "minecraft:salmon",
       "minecraft:tropical_fish",
     ],
-    "harmful": [
+    harmful: [
       "minecraft:drowned",
       "minecraft:enderman",
       //"minecraft:hoglin",
@@ -61,7 +68,7 @@ registry = {
       //"minecraft:vindicator",
     ],
   },
-  "surfaces": [
+  surfaces: [
     "minecraft:badlands",
     //"minecraft:basalt_deltas",
     //"minecraft:crimson_forest",
