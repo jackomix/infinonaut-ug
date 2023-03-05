@@ -42,13 +42,34 @@ function generateDimension(zip, nameHistory) {
     dimensionProperties.skyColor = convertColorToMC(baseSkyColor)
     dimensionProperties.fogColor = convertColorToMC(changeBrightness(0.5, baseSkyColor))
 
-    // Decide how many biomes to generate
+    // Do the same for water
+    baseWaterColor = randomColor()
+    dimensionProperties.waterColor = convertColorToMC(baseWaterColor)
+    dimensionProperties.waterFogColor = convertColorToMC(changeBrightness(-0.25, baseWaterColor))
+
+    // Make a name history array for the dimension to prevent repeating biome names
+    dimensionProperties.nameHistory = []
+
+    // Decide how many biomes to generate and begin to generate them
     numBiomes = rbArray(registry.numBiomes)
     for (var i = 0; i < numBiomes; i++) {
-        generateBiome(zip, name, dimensionProperties)
+        generateBiome(zip, dimensionProperties)
     }
+
+    // Copy the dimension template object onto the object we'll be editing
+    dimension = dimensionBase
+
+    // Adds the dimension to the zip file provided
+    zip.folder("data").folder(registry.namepsace).folder("dimension").file(dimensionProperties.dimensionName + ".json", JSON.stringify(dimension));
 }
 
-function generateBiome(zip, name, dimProp) {
-    
+function generateBiome(zip, dimensionProperties) {
+    // Generate a name for the biome
+    biomeName = nameGen(rb(1, 4, 2, 0.65), dimensionProperties.nameHistory)
+
+    // Copy the biome template object onto the object we'll be editing
+    biome = biomeBase
+
+    // Adds the biome to the zip file provided
+    zip.folder("data").folder(registry.namepsace).folder("worldgen").folder("biome").file(dimensionProperties.dimensionName + "_" + biomeName + ".json", JSON.stringify(biome));
 }

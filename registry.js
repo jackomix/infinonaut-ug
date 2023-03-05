@@ -1,6 +1,7 @@
 // This big JSON object contains configurable variables, and list of elements for the system to use during generation.
 
 registry = {
+  "namespace": "infinonaut",
   "numDimensions": 10,
   "numBiomes": [2, 5, 3, 0.75],
   "mobs": {
