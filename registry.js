@@ -6,10 +6,11 @@ registry = {
   numBiomes: [2, 5, 3, 0.75], // How many biomes to generate per dimension
   dimension: {
     biomeDepthBiasInfluence: [0, 1.5, 0.75, 2], // The amount of bias influence to use for determining depth. High influence means biomes will match more in depth.
+    biomeScaleBias: [0.001, 1.0, 0.025, 0.85, 3], // What scale value biomes in a dimension should be biased towards. Low scale bias means biomes with be more flatter.
   },
   biome: {
     depth: [-0.5, 1.75, 0.125, undefined, 3], // The ground level that a biome is generated at. Influence is decided by registry.dimension.biomeDepthBiasInfluence, set per dimension
-    scale: [0.01, 1.75, 0.025, 0.7, 3], // The "roughness" of a biome
+    scale: [0.01, 1.75, undefined, 0.7, 3], // The "roughness" of a biome
     
     spawning: {
       altitude: [0, 0.5, 3],

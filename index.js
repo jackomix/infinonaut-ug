@@ -39,6 +39,7 @@ function generateDimension(zip, nameHistory) {
 
     // - Generation Settings -
     dimensionProperties.biomeDepthBiasInfluence = regValue(registry.dimension.biomeDepthBiasInfluence)
+    dimensionProperties.biomeScaleBias = regValue(registry.dimension.biomeScaleBias)
 
     // - Names -
     // Set the dimension's name
@@ -97,12 +98,13 @@ function generateBiome(zip, dimensionProperties) {
     biome = JSON.parse(JSON.stringify(biomeBase))
 
     // Biome Terrain
-    // Edit the registry random number settings, picking out a bias that's based on the dimension's flatness level
     biomeDepthEdited = regValue(registry.biome.depth)
     biomeDepthEdited[2] = regValue(dimensionProperties.biomeHeightBiasInfluence)
     biome.depth = regValue(biomeDepthEdited)
 
-    biome.scale = regValue(registry.biome.scale)
+    biomeScaleEdited = regValue(registry.biome.scale)
+    biomeScaleEdited[2] = regValue(dimensionProperties.biomeScaleBias)
+    biome.scale = regValue(biomeScaleEdited)
 
     // Set the temperature of the biome, this is used for biome placement.
     biome.temperature = regValue(registry.biome.spawning.temperature)
