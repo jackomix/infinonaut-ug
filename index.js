@@ -99,7 +99,7 @@ function generateBiome(zip, dimensionProperties) {
 
     // Biome Terrain
     biomeDepthEdited = regValue(registry.biome.depth)
-    biomeDepthEdited[2] = regValue(dimensionProperties.biomeHeightBiasInfluence)
+    biomeDepthEdited[2] = regValue(dimensionProperties.biomeDepthBiasInfluence)
     biome.depth = regValue(biomeDepthEdited)
 
     biomeScaleEdited = regValue(registry.biome.scale)
