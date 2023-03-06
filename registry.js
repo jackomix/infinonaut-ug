@@ -1,18 +1,15 @@
 // This big JSON object contains configurable variables, and list of elements for the system to use during generation.
 
 registry = {
-  namespace: "infinonaut",
-  numDimensions: 10,
-  numBiomes: [2, 5, 3, 0.75],
+  namespace: "infinonaut", // Namespace used in datapack. Like the "minecraft" in "minecraft:overworld"
+  numDimensions: 10, // How many dimensions to generate
+  numBiomes: [2, 5, 3, 0.75], // How many biomes to generate per dimension
   dimension: {
-    flatness: [0, 1, 0.5, 0.15, 2],
-    roughness: [0, 1, 0.5, 0.15, 2],
+    biomeDepthBiasInfluence: [0, 1.5, 0.75, 2], // The amount of bias influence to use for determining depth. High influence means biomes will match more in depth.
   },
   biome: {
-    depth: [-1, 2, 1, undefined, 3],
-    depthBias: [0, 1.5, 0.75, 2],
-
-    scale: [0.01, 1.75, 0.025, 0.7, 3],
+    depth: [-0.5, 1.75, 0.125, undefined, 3], // The ground level that a biome is generated at. Influence is decided by registry.dimension.biomeDepthBiasInfluence, set per dimension
+    scale: [0.01, 1.75, 0.025, 0.7, 3], // The "roughness" of a biome
     
     spawning: {
       altitude: [0, 0.5, 3],
