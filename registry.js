@@ -4,15 +4,22 @@ registry = {
   namespace: "infinonaut",
   numDimensions: 10,
   numBiomes: [2, 5, 3, 0.75],
+  dimension: {
+    flatness: [0, 1, 0.5, 0.15, 2],
+    roughness: [0, 1, 0.5, 0.15, 2],
+  },
   biome: {
-    depth: [-2, 3, 0.5, 0.9, 3],
-    scale: [0, 3, 0.025, 0.7, 3],
+    depth: [-1, 2, 1, undefined, 3],
+    depthBias: [0, 1.5, 0.75, 2],
+
+    scale: [0.01, 1.75, 0.025, 0.7, 3],
+    
     spawning: {
-      altitude: 0,
-      temperature: 0,
-      humidity: 0,
-      weirdness: 0,
-      offset: 0,
+      altitude: [0, 0.5, 3],
+      temperature: [0, 0.5, 3],
+      humidity: [0, 0.5, 3],
+      weirdness: [0, 0.5, 3],
+      offset: [0, 0.5, 3],
     },
   },
   mobs: {

@@ -37,18 +37,21 @@ function generateDimension(zip, nameHistory) {
     // Make a JSON object that contains properties that the biome will need to know. Like name, sky color, etc
     dimensionProperties = {}
 
-    // Names
+    // - Generation Settings -
+    dimensionProperties.flatness = regValue(registry.dimension.flatness)
+    dimensionProperties.roughness = regValue(registry.dimension.roughness)
+
+    // - Names -
     // Set the dimension's name
     dimensionProperties.dimensionName = nameGen(randomBiasedNumber(1, 4, 2, 0.65), nameHistory)
     // Make a name history array for preventing duplicate names, and for adding biomes to the dimension JSON
     dimensionProperties.biomeNameHistory = []
 
-    // Colors
+    // - Colors  -
     // Generate a base color for sky color, then set it to the sky and fog color. We also increase the brightness for the fog color.
     baseSkyColor = randomColor()
     dimensionProperties.skyColor = convertColorToMC(baseSkyColor)
     dimensionProperties.fogColor = convertColorToMC(changeBrightness(0.5, baseSkyColor))
-
     // Do the same for water
     baseWaterColor = randomColor()
     dimensionProperties.waterColor = convertColorToMC(baseWaterColor)
@@ -79,18 +82,7 @@ function generateDimension(zip, nameHistory) {
 
     }
 
-    /*
-    {
-          biome: "minecraft:plains",
-          parameters: {
-            altitude: 0,
-            temperature: 0,
-            humidity: 0,
-            weirdness: 0,
-            offset: 0,
-          },
-        },
-        */
+    console.log(dimensionProperties)
 
     // Adds the dimension to the zip file provided
     zip.folder("data")
@@ -106,11 +98,20 @@ function generateBiome(zip, dimensionProperties) {
     // Copy the biome template object onto the object we'll be editing
     biome = JSON.parse(JSON.stringify(biomeBase))
 
-
-
     // Biome Terrain
-    biome.depth = regValue(registry.biome.depth)
-    biome.scale = regValue(registry.biome.scale)
+    // Edit the registry random number settings, picking out a bias that's based on the dimension's flatness level
+    biomeDepthEdited = registry.biome.scale
+    biomeDepthEdited[2] = scale(dimensionProperties.flatness, 0, 1, registry.biome.depthBiasRange[0], registry.biome.depthBiasRange[1])
+    biomeDepthEdited[3] = scale(dimensionProperties.flatness, 0, 1, registry.biome.depthBiasInfluenceRange[0], registry.biome.depthBiasInfluenceRange[0])
+    biome.depth = regValue(biomeDepthEdited)
+
+    biomeScaleEdited = registry.biome.scale
+    biomeScaleEdited[2] = scale(dimensionProperties.roughness, 0, 1, registry.biome.scaleBiasRange[0], registry.biome.scaleBiasRange[1])
+    biomeScaleEdited[3] = scale(dimensionProperties.roughness, 0, 1, registry.biome.scaleBiasInfluenceRange[0], registry.biome.scaleBiasInfluenceRange[0])
+    biome.scale = regValue(biomeScaleEdited)
+
+    // Set the temperature of the biome, this is used for biome placement.
+    biome.temperature = regValue(registry.biome.spawning.temperature)
 
     // Colors
     biome.effects.sky_color = dimensionProperties.skyColor

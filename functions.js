@@ -21,25 +21,37 @@ function randomBiasedNumber(min, max, bias, influence, dec = 0) {
 // Checks if registry option is a number, random number, or random biased number.
 // Then, returns the computed output.
 function regValue(registryValue) {
-  if (Array.isArray(registryValue)) { // Check if registryValue is an array, if so then it's either random number or random biased number.
+  // Check if registryValue is an array, if so then it's either random number or random biased number.
+  if (Array.isArray(registryValue)) {
+
+    // Random number without decimal parameter
     if (typeof registryValue[2] === 'undefined') { 
-      // Random number without decimal parameter
       return randomNumber(registryValue[0], registryValue[1])
+
+    // Random number with decimal parameter
     } else if (typeof registryValue[3] === 'undefined') {
-      // Random number with decimal parameter
       return randomNumber(registryValue[0], registryValue[1], registryValue[2])
 
+    // Random biased number without decimal parameter
     } else if (typeof registryValue[4] === 'undefined') {
-      // Random biased number without decimal parameter
       return randomBiasedNumber(registryValue[0], registryValue[1], registryValue[2], registryValue[3])
 
+    // Random biased number with decimal parameter
     } else {
-      // Random biased number with decimal parameter
       return randomBiasedNumber(registryValue[0], registryValue[1], registryValue[2], registryValue[3], registryValue[4])
     }
-  } else { // If registryValue is not an array, then it's probably just some number or string, so no need to compute it.
+
+  // If registryValue is not an array, then it's probably just some number or string, so no need to compute it.
+  } else {
     return registryValue
   }
+}
+
+// Scales a number in one range to what it'd be in another range
+// Mainly used to use dimension Generator Settings (which go from 0 to 1) and apply it to various other settings in generation.
+// https://stackoverflow.com/questions/10756313/javascript-jquery-map-a-range-of-numbers-to-another-range-of-numbers
+function scale(number, inMin, inMax, outMin, outMax) {
+  return (number - inMin) * (outMax - outMin) / (inMax - inMin) + outMin;
 }
 
 // Generates a random weird name, checking the name in the given history array to see if the name already exists (and thus should be regenerated).
