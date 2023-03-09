@@ -160,13 +160,6 @@ registry = {
       "minecraft:birch_tall",
       "minecraft:bamboo",
 
-      "bracken:pax/peace_tree1",
-      "bracken:pax/peace_tree2",
-      "bracken:pax/pink_tree1",
-      "bracken:pax/pink_tree2",
-      "bracken:pax/pink_asd",
-      "bracken:pax/peace_asd",
-
       "minecraft:disk_clay",
       "minecraft:disk_gravel",
       "minecraft:disk_sand",

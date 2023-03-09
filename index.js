@@ -139,10 +139,13 @@ function processFeatureCategories() {
     // Define our featureDatabase array that we will manipulate
     featureDatabase = registry.database.features
 
-    // Remove specific features mentioned in the blacklist
-    featureDatabase = featureDatabase.filter((el) => !registry.featureCategories.blacklist.specificFeatures.includes(el));
+    // Remove features from featureDatabase that are mentioned specifically in categories (including blacklist)
+    for (const categoryName in registry.featureCategories) {
+        if (categoryName == "misc") { continue; }
+        featureDatabase = featureDatabase.filter((el) => !registry.featureCategories[categoryName].specificFeatures.includes(el));
+    }
 
-    // Go through the categories (besides misc), and add specific features, then add search terms.
+    // Add features to categories using search
     for (const categoryName in registry.featureCategories) {
         // Ignore the misc category.
         if (categoryName == "misc") { continue; }
@@ -175,7 +178,7 @@ function processFeatureCategories() {
         searchResults = searchResults.filter((el) => !category.specificFeatures.includes(el));
 
         // Combine both search results and specific features mentioned to form the categories' final features list.
-        registry.featureCategories[categoryName].features = [].concat(category.specificFeatures, searchResults)
+        registry.featureCategories[categoryName].features = category.features.concat(category.specificFeatures, searchResults)
         
         // Remove features that we added to categories from the general featureDatabase
         featureDatabase = featureDatabase.filter((el) => !registry.featureCategories[categoryName].features.includes(el));
