@@ -139,7 +139,7 @@ function processFeatureCategories() {
     // Define our featureDatabase array that we will manipulate
     featureDatabase = registry.database.features
 
-    // Remove features from featureDatabase that are mentioned specifically in categories (including blacklist)
+    // Remove features from featureDatabase that are specified in categories (including blacklist)
     for (const categoryName in registry.featureCategories) {
         if (categoryName == "misc") { continue; }
         featureDatabase = featureDatabase.filter((el) => !registry.featureCategories[categoryName].specificFeatures.includes(el));
@@ -186,6 +186,4 @@ function processFeatureCategories() {
 
     // Add everything else to the misc category
     registry.featureCategories.misc.features = featureDatabase
-
-    console.log(registry.featureCategories)
 }
