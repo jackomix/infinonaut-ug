@@ -2,7 +2,7 @@ debugMode = true
 
 // Begins universe generation. Runs when the "Generate Universe" button is hit
 function begin() {
-    processFeatureCategories()
+    processCategories(registry.database.features, registry.featureCategories)
 
     // Generate a name for the universe
     universeName = nameGen(randomNumber(2,4), [])
@@ -134,56 +134,56 @@ function generateBiome(zip, dimensionProperties) {
     zip.folder("data").folder(registry.namespace).folder("worldgen") .folder("biome").file(fileName, JSON.stringify(biome));
 }
 
-// Sort the list of features in registry.database into their feature categories 
-function processFeatureCategories() {
-    // Define our featureDatabase array that we will manipulate
-    featureDatabase = registry.database.features
+// Process arrays into their respective categories set in the registry
+function processCategories(database, categories) {
+    // Define our mutableDatabase array that we will manipulate
+    mutableDatabase = database
 
-    // Remove features from featureDatabase that are specified in categories (including blacklist)
-    for (const categoryName in registry.featureCategories) {
+    // Remove features from mutableDatabase that are specified in categories (including blacklist)
+    for (const categoryName in categories) {
         if (categoryName == "misc") { continue; }
-        featureDatabase = featureDatabase.filter((el) => !registry.featureCategories[categoryName].specificFeatures.includes(el));
+        mutableDatabase = mutableDatabase.filter((el) => !categories[categoryName].specific.includes(el));
     }
 
-    // Add features to categories using search
-    for (const categoryName in registry.featureCategories) {
+    // Add items to categories using search
+    for (const categoryName in categories) {
         // Ignore the misc category.
         if (categoryName == "misc") { continue; }
 
         // Copy the category object to this variable for readability
-        const category = registry.featureCategories[categoryName]
+        const category = categories[categoryName]
 
         // Get search of results of search terms
         let searchResults = []
-        for (const feature of featureDatabase) {
+        for (const item of mutableDatabase) {
             for (const searchTerm of category.searchTerms) {
-                if (feature.includes(searchTerm)) {
+                if (item.includes(searchTerm)) {
                     searchResults.push(feature)
                 } 
             }
         }
 
         // Remove search results containing search ignore terms
-        for (const feature of searchResults) {
+        for (const item of searchResults) {
             for (const searchIgnoreTerm of category.searchIgnoreTerms) {
-                if (feature.includes(searchIgnoreTerm)) {
-                    searchResults = searchResults.filter(item => item !== feature)
+                if (item.includes(searchIgnoreTerm)) {
+                    searchResults = searchResults.filter(item => item !== item)
                 } 
             }
         }
 
-        // Remove specific features mentioned in searchIgnoreSpecificFeatures
-        searchResults = searchResults.filter((el) => !category.searchIgnoreSpecificFeatures.includes(el));
-        // Remove features already in the categories' specified features list
-        searchResults = searchResults.filter((el) => !category.specificFeatures.includes(el));
+        // Remove specific items mentioned in searchIgnoreSpecific
+        searchResults = searchResults.filter((el) => !category.searchIgnoreSpecific.includes(el));
+        // Remove items already in the categories' specified items list
+        searchResults = searchResults.filter((el) => !category.specific.includes(el));
 
-        // Combine both search results and specific features mentioned to form the categories' final features list.
-        registry.featureCategories[categoryName].features = category.features.concat(category.specificFeatures, searchResults)
+        // Combine both search results and specific items mentioned to form the categories' final items list.
+        category.items = [].concat(category.specific, searchResults)
         
-        // Remove features that we added to categories from the general featureDatabase
-        featureDatabase = featureDatabase.filter((el) => !registry.featureCategories[categoryName].features.includes(el));
+        // Remove items that we added to categories from the general mutableDatabase
+        mutableDatabase = mutableDatabase.filter((el) => !category.items.includes(el));
     }
 
     // Add everything else to the misc category
-    registry.featureCategories.misc.features = featureDatabase
+    categories.misc.items = mutableDatabase
 }

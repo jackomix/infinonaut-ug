@@ -24,9 +24,9 @@ registry = {
       // Use this category to remove any features from potentially generating.
       searchTerms: ["bracken"], // Search for these terms in the feature list to dynamic add them to the blacklist. Mainly for dynamic mod support.
       searchIgnoreTerms: ["peace"], // Ignore these features if they contain these terms, even if they come up during search.
-      searchIgnoreSpecificFeatures: [], // Ignore these specific features, even if they come up during search.
+      searchIgnoreSpecific: [], // Ignore these specific features, even if they come up during search.
 
-      specificFeatures: [], // Add these specific features to the blacklist.
+      specific: [], // Add these specific features to the blacklist.
     },
     misc: {
       // This category represents any features that weren't added to a category.
@@ -40,9 +40,9 @@ registry = {
 
       searchTerms: ["tree"], // Search for these terms in the feature list to dynamic add them to this category. Mainly for dynamic mod support.
       searchIgnoreTerms: [], // Ignore these features if they contain these terms, even if they come up during search.
-      searchIgnoreSpecificFeatures: [], // Ignore these specific features even if they come up during search.
+      searchIgnoreSpecific: [], // Ignore these specific features even if they come up during search.
 
-      specificFeatures: [
+      specific: [
         // Add these specific features.
         "minecraft:trees_birch",
         "minecraft:birch_tall",
