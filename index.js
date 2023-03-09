@@ -38,8 +38,8 @@ function generateDimension(zip, nameHistory) {
     dimensionProperties = {}
 
     // - Generation Settings -
-    dimensionProperties.biomeDepthBiasInfluence = regValue(registry.dimension.biomeDepthBiasInfluence)
-    dimensionProperties.biomeScaleBias = regValue(registry.dimension.biomeScaleBias)
+    dimensionProperties.biomeDepthBiasInfluence = regValue(registry.biome.depthBiasInfluence)
+    dimensionProperties.biomeScaleBias = regValue(registry.biome.scaleBias)
 
     // - Names -
     // Set the dimension's name
