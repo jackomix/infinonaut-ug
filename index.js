@@ -1,7 +1,9 @@
-debugMode = false
+debugMode = true
 
 // Begins universe generation. Runs when the "Generate Universe" button is hit
 function begin() {
+    processFeatureCategories()
+
     // Generate a name for the universe
     universeName = nameGen(randomNumber(2,4), [])
     
@@ -57,6 +59,13 @@ function generateDimension(zip, nameHistory) {
     dimensionProperties.waterColor = convertColorToMC(baseWaterColor)
     dimensionProperties.waterFogColor = convertColorToMC(changeBrightness(-0.25, baseWaterColor))
 
+    // Feature Parsing
+    // Decide the spawning chance for each category.
+    dimensionProperties.featureCategories = []
+    for (const categoryName in registry.featureCategories) {
+        dimensionProperties.featureCategories.push([categoryName, regValue(registry.featureCategories[categoryName].percentageChanceOfSpawning)])
+    }
+
     // Copy the dimension template object onto the object we'll be editing
     dimension = JSON.parse(JSON.stringify(dimensionBase));
 
@@ -90,6 +99,7 @@ function generateDimension(zip, nameHistory) {
         .file(dimensionProperties.dimensionName + ".json", JSON.stringify(dimension));
 }
 
+// Generate and insert a biome into the given datapack zip
 function generateBiome(zip, dimensionProperties) {
     // Generate a name for the biome
     biomeName = nameGen(randomBiasedNumber(1, 4, 2, 0.65), dimensionProperties.biomeNameHistory)
@@ -122,4 +132,57 @@ function generateBiome(zip, dimensionProperties) {
     // Adds the biome to the zip file provided
     fileName = dimensionProperties.dimensionName + "_" + biomeName + ".json"
     zip.folder("data").folder(registry.namespace).folder("worldgen") .folder("biome").file(fileName, JSON.stringify(biome));
+}
+
+// Sort the list of features in registry.database into their feature categories 
+function processFeatureCategories() {
+    // Define our featureDatabase array that we will manipulate
+    featureDatabase = registry.database.features
+
+    // Remove specific features mentioned in the blacklist
+    featureDatabase = featureDatabase.filter((el) => !registry.featureCategories.blacklist.specificFeatures.includes(el));
+
+    // Go through the categories (besides misc), and add specific features, then add search terms.
+    for (const categoryName in registry.featureCategories) {
+        // Ignore the misc category.
+        if (categoryName == "misc") { continue; }
+
+        // Copy the category object to this variable for readability
+        const category = registry.featureCategories[categoryName]
+
+        // Get search of results of search terms
+        let searchResults = []
+        for (const feature of featureDatabase) {
+            for (const searchTerm of category.searchTerms) {
+                if (feature.includes(searchTerm)) {
+                    searchResults.push(feature)
+                } 
+            }
+        }
+
+        // Remove search results containing search ignore terms
+        for (const feature of searchResults) {
+            for (const searchIgnoreTerm of category.searchIgnoreTerms) {
+                if (feature.includes(searchIgnoreTerm)) {
+                    searchResults = searchResults.filter(item => item !== feature)
+                } 
+            }
+        }
+
+        // Remove specific features mentioned in searchIgnoreSpecificFeatures
+        searchResults = searchResults.filter((el) => !category.searchIgnoreSpecificFeatures.includes(el));
+        // Remove features already in the categories' specified features list
+        searchResults = searchResults.filter((el) => !category.specificFeatures.includes(el));
+
+        // Combine both search results and specific features mentioned to form the categories' final features list.
+        registry.featureCategories[categoryName].features = [].concat(category.specificFeatures, searchResults)
+        
+        // Remove features that we added to categories from the general featureDatabase
+        featureDatabase = featureDatabase.filter((el) => !registry.featureCategories[categoryName].features.includes(el));
+    }
+
+    // Add everything else to the misc category
+    registry.featureCategories.misc.features = featureDatabase
+
+    console.log(registry.featureCategories)
 }

@@ -17,47 +17,50 @@ registry = {
       weirdness: [0, 0.5, 3],
       offset: [0, 0.5, 3],
     },
+  },
+  featureCategories: {
+    // Categories are dynamic, meaning they can be added or removed just by editing the registry. Except the blacklist and misc category.
+    blacklist: {
+      // Use this category to remove any features from potentially generating.
+      searchTerms: ["bracken"], // Search for these terms in the feature list to dynamic add them to the blacklist. Mainly for dynamic mod support.
+      searchIgnoreTerms: ["peace"], // Ignore these features if they contain these terms, even if they come up during search.
+      searchIgnoreSpecificFeatures: [], // Ignore these specific features, even if they come up during search.
 
-    features: { // Categories are dynamic, meaning they can be added or removed just by editing the registry. Except the blacklist and misc category.
-      blacklist: { // Use this category to remove any features from potentially generating.
-        searchTerms: [], // Search for these terms in the feature list to dynamic add them to the blacklist. Mainly for dynamic mod support.
-        searchIgnoreTerms: [], // Ignore these features if they contain these terms, even if they come up during search.
-        searchIgnoreSpecificTerms: [], // Ignore these specific terms, even if they come up during search.
+      specificFeatures: [], // Add these specific features to the blacklist.
+    },
+    misc: {
+      // This category represents any features that weren't added to a category.
+      percentageChanceOfSpawning: [10, 100, 75, 0.6], // Applied to all biomes within one dimension, what are the chances that this feature category will spawn?
+      selectionAmount: [1, 6, 3, 0.8], // If decided to spawn features from this category, how many should be used?
+    },
 
-        specificTerms: [], // Add these specific features to the blacklist.
-      },
-      misc: { // This category represents any features that weren't added to a category.
-        percentageChanceOfSpawning: [10, 100, 75, 0.6], // Applied to all biomes within one dimension, what are the chances that this feature category will spawn?
-        selectionAmount: [1, 6, 3, 0.8], // If decided to spawn features from this category, how many should be used?
-      },
+    trees: {
+      percentageChanceOfSpawning: [1, 90, 10, 0.85], // Applied to all biomes within one dimension, what are the chances that this feature category will spawn?
+      selectionAmount: [1, 3, 1, 0.9], // If decided to spawn features from this category, how many should be used?
 
-      trees: {
-        percentageChanceOfSpawning: [1, 90, 10, 0.85], // Applied to all biomes within one dimension, what are the chances that this feature category will spawn?
-        selectionAmount: [1, 3, 1, 0.9], // If decided to spawn features from this category, how many should be used?
+      searchTerms: ["tree"], // Search for these terms in the feature list to dynamic add them to this category. Mainly for dynamic mod support.
+      searchIgnoreTerms: [], // Ignore these features if they contain these terms, even if they come up during search.
+      searchIgnoreSpecificFeatures: [], // Ignore these specific features even if they come up during search.
 
-        searchTerms: ["tree"], // Search for these terms in the feature list to dynamic add them to this category. Mainly for dynamic mod support.
-        searchIgnoreTerms: [], // Ignore these features if they contain these terms, even if they come up during search.
-        searchIgnoreSpecificTerms: [], // Ignore these specific terms even if they come up during search.
-
-        specificTerms: [ // Add these specific features.
-          "minecraft:trees_birch",
-          "minecraft:birch_tall",
-          "minecraft:trees_badlands",
-          "minecraft:trees_birch",
-          "minecraft:trees_giant",
-          "minecraft:trees_giant_spruce",
-          "minecraft:trees_jungle",
-          "minecraft:trees_jungle_edge",
-          "minecraft:trees_mountain",
-          "minecraft:trees_mountain_edge",
-          "minecraft:trees_savanna",
-          "minecraft:trees_shattered_savanna",
-          "minecraft:trees_snowy",
-          "minecraft:trees_swamp",
-          "minecraft:birch_tall",
-          "minecraft:bamboo",
-        ],
-      },
+      specificFeatures: [
+        // Add these specific features.
+        "minecraft:trees_birch",
+        "minecraft:birch_tall",
+        "minecraft:trees_badlands",
+        "minecraft:trees_birch",
+        "minecraft:trees_giant",
+        "minecraft:trees_giant_spruce",
+        "minecraft:trees_jungle",
+        "minecraft:trees_jungle_edge",
+        "minecraft:trees_mountain",
+        "minecraft:trees_mountain_edge",
+        "minecraft:trees_savanna",
+        "minecraft:trees_shattered_savanna",
+        "minecraft:trees_snowy",
+        "minecraft:trees_swamp",
+        "minecraft:birch_tall",
+        "minecraft:bamboo",
+      ],
     },
   },
   database: {
@@ -140,7 +143,38 @@ registry = {
       "minecraft:wooded_badlands",
     ],
     features: [
+      "minecraft:trees_birch",
+      "minecraft:birch_tall",
+      "minecraft:trees_badlands",
+      "minecraft:trees_birch",
+      "minecraft:trees_giant",
+      "minecraft:trees_giant_spruce",
+      "minecraft:trees_jungle",
+      "minecraft:trees_jungle_edge",
+      "minecraft:trees_mountain",
+      "minecraft:trees_mountain_edge",
+      "minecraft:trees_savanna",
+      "minecraft:trees_shattered_savanna",
+      "minecraft:trees_snowy",
+      "minecraft:trees_swamp",
+      "minecraft:birch_tall",
+      "minecraft:bamboo",
 
-    ]
-  }
+      "bracken:pax/peace_tree1",
+      "bracken:pax/peace_tree2",
+      "bracken:pax/pink_tree1",
+      "bracken:pax/pink_tree2",
+      "bracken:pax/pink_asd",
+      "bracken:pax/peace_asd",
+
+      "minecraft:disk_clay",
+      "minecraft:disk_gravel",
+      "minecraft:disk_sand",
+      "minecraft:ore_andesite",
+      "minecraft:ore_clay",
+      "minecraft:ore_coal",
+      "minecraft:ore_copper",
+      "minecraft:ore_deepslate",
+    ],
+  },
 };
