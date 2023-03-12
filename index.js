@@ -1,4 +1,4 @@
-debugMode = true
+debugMode = false
 
 // Begins universe generation. Runs when the "Generate Universe" button is hit
 function begin() {
@@ -18,13 +18,13 @@ function begin() {
 
     // Run a loop, generate
     dimensionNameHistory = []
-    for (var i = 0; i < registry.numDimensions; i++) {
+    for (let i = 0; i < registry.numDimensions; i++) {
         // Loop the generate dimension function, we pass the history of dimension names to prevent duplicate names
         generateDimension(datapack, dimensionNameHistory)
     }
 
     // Export the .zip
-    if (debugMode !== true) {
+    if (!debugMode) {
         datapack.generateAsync({type:"blob"})
         .then(function(blob) {
             saveAs(blob, universeName + " universe.zip")
@@ -71,7 +71,7 @@ function generateDimension(zip, nameHistory) {
 
     // Generate biomes and add them to the biome_source list in the dimension object
     numBiomes = regValue(registry.numBiomes)
-    for (var i = 0; i < numBiomes; i++) {
+    for (let i = 0; i < numBiomes; i++) {
         // Generate the biome
         generateBiome(zip, dimensionProperties)
 
@@ -128,6 +128,42 @@ function generateBiome(zip, dimensionProperties) {
 
     biome.effects.grass_color = convertColorToMC(randomColor())
     biome.effects.foliage_color = convertColorToMC(randomColor())
+
+    // Features
+    
+    // dimensionPropertiesCategory is the array containing the category name and the chance percentage deciding in dimension gen
+    // Honestly not the most effiecent way to do this but, I think it's good enough.
+    for (const dimensionPropertiesCategory of dimensionProperties.featureCategories) {
+        const category = registry.featureCategories[dimensionPropertiesCategory[0]]
+        const categoryName = dimensionPropertiesCategory[0]
+        const categoryDimensionBasedChance = dimensionPropertiesCategory[1]
+
+        // Ignore blacklist
+        if (categoryName == "blacklist") { continue; }
+
+        // Randomize a percentage and check if the dimension-based category chance wins
+        if (categoryDimensionBasedChance <= randomNumber(0, 100)) {
+            // Make a mutable list of the categories' items and check how many to take form that list
+            const mutableItemList = category.items
+            const howManyItemsToTake = regValue(category.selectionAmount)
+            const featureStep = regValue(category.featureStep) // regValue if someone wants to randomize this for some reason lol
+            let randomItemIndex = 0
+            
+            // Repeating, take out an item from the categories' item list and put it into the biome's feature step
+            // If list runs out before the entire repeating process is complete, just move on
+            for (let itemTakingIndex = 0; itemTakingIndex < howManyItemsToTake; itemTakingIndex++) {
+                if (mutableItemList.length <= 0) { break }
+
+                randomItemIndex = randomNumber(0, mutableItemList.length - 1)
+
+                console.log(biome.features)
+                biome.features[featureStep - 1].push(mutableItemList[randomItemIndex])
+                mutableItemList.splice(randomItemIndex, 1)
+            }
+        }
+    }
+
+    console.log(biome)
 
     // Adds the biome to the zip file provided
     fileName = dimensionProperties.dimensionName + "_" + biomeName + ".json"

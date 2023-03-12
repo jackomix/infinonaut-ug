@@ -1,5 +1,9 @@
 // This big JSON object contains configurable variables, and list of elements for the system to use during generation.
 
+// to-do
+// let dimensions use biomes in general
+// add tiers that dimensions can have and let categories be gated behind tiers
+
 registry = {
   namespace: "infinonaut", // Namespace used in datapack. Like the "minecraft" in "minecraft:overworld"
   numDimensions: 10, // How many dimensions to generate
@@ -32,11 +36,13 @@ registry = {
       // This category represents any features that weren't added to a category.
       percentageChanceOfSpawning: [10, 100, 75, 0.6], // Applied to all biomes within one dimension, what are the chances that this feature category will spawn?
       selectionAmount: [1, 6, 3, 0.8], // If decided to spawn features from this category, how many should be used?
+      featureStep: 8,
     },
 
     trees: {
-      percentageChanceOfSpawning: [1, 90, 10, 0.85], // Applied to all biomes within one dimension, what are the chances that this feature category will spawn?
+      percentageChanceOfSpawning: [1, 90, 50, 0.85], // Applied to all biomes within one dimension, what are the chances that this feature category will spawn?
       selectionAmount: [1, 3, 1, 0.9], // If decided to spawn features from this category, how many should be used?
+      featureStep: 9,
 
       searchTerms: ["tree"], // Search for these terms in the feature list to dynamic add them to this category. Mainly for dynamic mod support.
       searchIgnoreTerms: [], // Ignore these features if they contain these terms, even if they come up during search.
