@@ -1,4 +1,4 @@
-debugMode = false
+debugMode = true
 
 // Begins universe generation. Runs when the "Generate Universe" button is hit
 function begin() {
@@ -33,15 +33,17 @@ function begin() {
     
 }
 
-
 // Generate and insert a dimension into the given datapack zip
 function generateDimension(zip, nameHistory) {
     // Make a JSON object that contains properties that the biome will need to know. Like name, sky color, etc
     dimensionProperties = {}
 
+    // - Classes -
+    dimensionProperties.tags = processTags(registry.tags, "dimension")
+
     // - Generation Settings -
-    dimensionProperties.biomeDepthBiasInfluence = regValue(registry.biome.depthBiasInfluence)
-    dimensionProperties.biomeScaleBias = regValue(registry.biome.scaleBias)
+    dimensionProperties.biomeDepthBiasInfluence = regValue(registry.biome.default.depthBiasInfluence)
+    dimensionProperties.biomeScaleBias = regValue(registry.biome.default.scaleBias)
 
     // - Names -
     // Set the dimension's name
@@ -81,11 +83,11 @@ function generateDimension(zip, nameHistory) {
         dimension.generator.biome_source.biomes.push({
             biome: registry.namespace + ":" + dimensionProperties.dimensionName + "_" + lastBiomeName,
             parameters: {
-              altitude: regValue(registry.biome.spawning.altitude),
-              temperature: regValue(registry.biome.spawning.temperature),
-              humidity: regValue(registry.biome.spawning.humidity),
-              weirdness: regValue(registry.biome.spawning.weirdness),
-              offset: regValue(registry.biome.spawning.offset),
+              altitude: regValue(registry.biome.default.spawning.altitude),
+              temperature: regValue(registry.biome.default.spawning.temperature),
+              humidity: regValue(registry.biome.default.spawning.humidity),
+              weirdness: regValue(registry.biome.default.spawning.weirdness),
+              offset: regValue(registry.biome.default.spawning.offset),
             },
         })
     }
@@ -108,16 +110,16 @@ function generateBiome(zip, dimensionProperties) {
     biome = JSON.parse(JSON.stringify(biomeBase))
 
     // Biome Terrain
-    biomeDepthEdited = regValue(registry.biome.depth)
+    biomeDepthEdited = regValue(registry.biome.default.depth)
     biomeDepthEdited[2] = regValue(dimensionProperties.biomeDepthBiasInfluence)
     biome.depth = regValue(biomeDepthEdited)
 
-    biomeScaleEdited = regValue(registry.biome.scale)
+    biomeScaleEdited = regValue(registry.biome.default.scale)
     biomeScaleEdited[2] = regValue(dimensionProperties.biomeScaleBias)
     biome.scale = regValue(biomeScaleEdited)
 
     // Set the temperature of the biome, this is used for biome placement.
-    biome.temperature = regValue(registry.biome.spawning.temperature)
+    biome.temperature = regValue(registry.biome.default.spawning.temperature)
 
     // Colors
     biome.effects.sky_color = dimensionProperties.skyColor
@@ -129,6 +131,9 @@ function generateBiome(zip, dimensionProperties) {
     biome.effects.grass_color = convertColorToMC(randomColor())
     biome.effects.foliage_color = convertColorToMC(randomColor())
 
+    // Classes
+    biome.tags = dimensionProperties.tags.concat(processTags(registry.tags, "biome"))
+    console.log(biome)
     // Features
     
     // dimensionPropertiesCategory is the array containing the category name and the chance percentage deciding in dimension gen
@@ -156,14 +161,11 @@ function generateBiome(zip, dimensionProperties) {
 
                 randomItemIndex = randomNumber(0, mutableItemList.length - 1)
 
-                console.log(biome.features)
                 biome.features[featureStep - 1].push(mutableItemList[randomItemIndex])
                 mutableItemList.splice(randomItemIndex, 1)
             }
         }
     }
-
-    console.log(biome)
 
     // Adds the biome to the zip file provided
     fileName = dimensionProperties.dimensionName + "_" + biomeName + ".json"
@@ -222,4 +224,40 @@ function processCategories(database, categories) {
 
     // Add everything else to the misc category
     categories.misc.items = mutableDatabase
+}
+
+// Processes tags and returns a list of the decided tags
+function processTags(tagsObject, tagSetListName) {
+    // Define the tag list that we will return
+    let tagList = []
+    let tagSets = tagsObject[tagSetListName]
+
+   // Go through each tag set, and pick a tag in the set using the determined probabilities
+    for (const tagSet in tagSets) {
+        const tagSetObj = tagSets[tagSet]
+        let decidedTag = ""
+
+        // --- god bless chatgpt ---
+        // Calculate total percentage of all entries
+        const totalPercentage = Object.values(tagSetObj).reduce((acc, curr) => acc + curr.percentageChance, 0);
+        
+        // Generate a random number between 0 and totalPercentage
+        const randomNum = Math.random() * totalPercentage;
+        
+        // Iterate over entries and check if random number falls within their percentage range
+        let currPercentage = 0;
+        for (const [key, value] of Object.entries(tagSetObj)) {
+            currPercentage += value.percentageChance;
+            if (randomNum <= currPercentage) {
+                decidedTag = key
+            }
+        }
+        // ---
+
+        // Generate and add the final tag label to the tag list
+        tagLabel = tagSetListName + "/" + tagSet + "/" + decidedTag
+        tagList.push(tagLabel)
+    }
+
+    return tagList
 }

@@ -74,6 +74,26 @@ function convertColorToMC(color) {
   return parseInt(color.substring(1), 16)
 }
 
+// Thanks ChatGPT lol
+function multiplyUntilNoDecimals(arr) {
+  // Find the maximum number of decimal places in the array
+  const maxDecimalPlaces = Math.max(...arr.map(num => {
+    const decimalPlaces = num.toString().split('.')[1];
+    return decimalPlaces ? decimalPlaces.length : 0;
+  }));
+
+  // Multiply each number by a factor of 10^(maxDecimalPlaces + n) where n is the number of iterations required
+  let n = 0;
+  let allIntegers = arr.every(num => Number.isInteger(num));
+  while (!allIntegers) {
+    arr = arr.map(num => num * Math.pow(10, maxDecimalPlaces + n));
+    n++;
+    allIntegers = arr.every(num => Number.isInteger(num));
+  }
+
+  return arr;
+}
+
 // Brightens or darkens colors
 // https://stackoverflow.com/questions/5560248/programmatically-lighten-or-darken-a-hex-color-or-rgb-and-blend-colors
 const changeBrightness=(p,c0,c1,l)=>{
