@@ -94,6 +94,14 @@ function multiplyUntilNoDecimals(arr) {
   return arr;
 }
 
+// Used for overwriting values. If newValue doesn't exist, then just return elseValue
+function overwriteCheck(newValue, elseValue) {
+  if (typeof newValue !== "undefined") {
+    return newValue
+  }
+  return elseValue
+}
+
 // Brightens or darkens colors
 // https://stackoverflow.com/questions/5560248/programmatically-lighten-or-darken-a-hex-color-or-rgb-and-blend-colors
 const changeBrightness=(p,c0,c1,l)=>{

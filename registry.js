@@ -11,8 +11,9 @@ registry = {
   tags: {
     dimension: {
       coolness: {
-        notcool: { percentageChance: 75.5, },
-        cool: { percentageChance: 25, },
+        notcool: { percentageChance: 75, },
+        kinda: { percentageChance: 10, },
+        cool: { percentageChance: 15, },
       },
     },
     biome: {
@@ -37,7 +38,12 @@ registry = {
         offset: [0, 0.5, 3],
       },
     },
-    "biome/depth/underwater": {
+    underwaterDepth: {
+      tagsWhitelist: ["biome/depth/underwater"],
+      tagsWhitelistAll: false,
+      tagsBlacklist: [],
+      tagsBlacklistAll: false,
+
       depth: -1,
     },
   },
