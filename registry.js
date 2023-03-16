@@ -2,25 +2,42 @@
 
 // to-do
 // let dimensions use biomes in general
-// add tiers that dimensions can have and let categories be gated behind tiers
+// default search arrays so you can delete them from registry 
+// add tagsDisableCategoriesByDefault
+// add "mods are dynamically used by infinonaut, and aren't officially support by their authors"
 
 registry = {
   namespace: "infinonaut", // Namespace used in datapack. Like the "minecraft" in "minecraft:overworld"
   numDimensions: 10, // How many dimensions to generate
   numBiomes: [2, 5, 3, 0.75], // How many biomes to generate per dimension
   tags: {
-    dimension: {},
+    dimension: {
+      waterLevel: {
+        normal: { percentageChance: 25, },
+        islands: { percentageChance: 75, },
+      }
+    },
     biome: {
       depth: {
-        default: { percentageChance: 50, },
-        underwater: { percentageChance: 50, },
+        tagsExclude: ["dimension/waterLevel/islands"],
+
+        normal: { percentageChance: 75, },
+        underwater: { percentageChance: 20, },
+        high: { percentageChance: 5, }
+      },
+      depthIslands: {
+        tagsInclude: ["dimension/waterLevel/islands"],
+
+        normal: { percentageChance: 20, },
+        underwater: { percentageChance: 75, },
+        high: { percentageChance: 5, }
       },
     },
   },
   biome: {
     default: {
       depth: [-0.5, 1.75, 0.125, undefined, 3], // The ground level that a biome is generated at.
-      depthBiasInfluence: [0, 1.5, 0.75, 2, 2], // The amount of bias influence to use for determining depth. High influence means biomes will match more in depth.
+      depthBiasInfluence: [0, 1.5, 0.75, 0.65, 2], // The amount of bias influence to use for determining depth. High influence means biomes will match more in depth.
       scale: [0.01, 1.75, undefined, 0.75, 3], // The "roughness" of a biome
       scaleBias: [0.001, 0.75, 0.025, 0.85, 3], // What scale value biomes in a dimension should be biased towards. Low scale bias means biomes with be more flatter.
 
@@ -33,12 +50,16 @@ registry = {
       },
     },
     underwaterDepth: {
-      tagsInclude: ["biome/depth/underwater"],
-      tagsIncludeAll: false,
-      tagsExclude: [],
-      tagsExcludeAll: false,
+      tagsInclude: ["biome/depth/underwater", "biome/depthIslands/underwater"],
 
-      depth: -1,
+      depth: [-2, 0, -1, undefined, 3],
+      depthBiasInfluence: 0.75,
+    },
+    highDepth: {
+      tagsInclude: ["biome/depth/high", "biome/depthIslands/high"],
+
+      depth: [0.8, 2.25, 1.5, undefined, 3],
+      depthBiasInfluence: 0.7,
     },
   },
   featureCategories: {
@@ -65,10 +86,7 @@ registry = {
       selectionAmount: [1, 3, 1, 0.9], // If decided to spawn features from this category, how many should be used?
       featureStep: 9,
 
-      tagsInclude: [],
-      tagsIncludeAll: false,
-      tagsExclude: ["biome/depth/underwater", "biome/noTrees/true"],
-      tagsExcludeAll: true,
+      tagsExclude: ["biome/depth/underwater"],
 
       searchTerms: ["tree"], // Search for these terms in the feature list to dynamic add them to this category. Mainly for dynamic mod support.
       searchIgnoreTerms: [], // Ignore these features if they contain these terms, even if they come up during search.

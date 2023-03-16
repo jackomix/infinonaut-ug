@@ -1,4 +1,4 @@
-debugMode = false
+debugMode = true
 
 // Begins universe generation. Runs when the "Generate Universe" button is hit
 function begin() {
@@ -113,7 +113,7 @@ function generateBiome(zip, dimensionProperties) {
     biome = JSON.parse(JSON.stringify(biomeBase))
 
     // Process tags and include tags contained in the dimension
-    biome.tags = dimensionProperties.tags.concat(processTags(registry.tags, "biome"))
+    biome.tags = dimensionProperties.tags.concat(processTags(registry.tags, "biome", dimensionProperties.tags))
 
     // Check all biome settings and apply them
     for (const settings in registry.biome) {
@@ -121,7 +121,7 @@ function generateBiome(zip, dimensionProperties) {
         const settingsObj = registry.biome[settings]
 
         // Check if tag conditions are met
-        if (!tagTest(biome.tags, settingsObj)) { continue }
+        if (settings !== "default" && !tagTest(biome.tags, settingsObj)) { continue }
 
         let dimensionPropertiesObj = settingsObj
         if (settings == "default") {
@@ -146,7 +146,7 @@ function generateBiome(zip, dimensionProperties) {
         biomeScaleEdited = overwriteCheck(settingsObj.scale, biome.scale)
         if (settings == "default") {
             biomeScaleEdited[2] = dimensionProperties.biomeScaleBias
-        } else{
+        } else {
             biomeScaleEdited[2] = overwriteCheck(regValue(dimensionPropertiesObj.biomeScaleBias), dimensionProperties.biomeScaleBias)
         }
         biome.scale = regValue(biomeScaleEdited)
@@ -262,14 +262,27 @@ function processCategories(database, categories) {
 }
 
 // Processes tags and returns a list of the decided tags
-function processTags(tagsObject, tagSetListName) {
+function processTags(tagsObject, tagSetListName, compareTagList) {
     // Define the tag list that we will return
     let tagList = []
     let tagSets = tagsObject[tagSetListName]
 
    // Go through each tag set, and pick a tag in the set using the determined probabilities
     for (const tagSet in tagSets) {
-        const tagSetObj = tagSets[tagSet]
+        // As we will edit tagSetObj, we will duplicate it to prevent reflection
+        const tagSetObj = Object.assign({}, tagSets[tagSet])
+
+        // If given a tag list to compare, check tag conditions
+        if (compareTagList !== undefined) {
+            if (!tagTest(compareTagList, tagSetObj)) { continue }
+        }
+        // Remove tag entries so they're not mixed up in later code (and skip if they don't exist already)
+        delete tagSetObj.tagsInclude
+        delete tagSetObj.tagsExclude
+        delete tagSetObj.tagsIncludeAll
+        delete tagSetObj.tagsExcludeAll
+
+        // This string will be the name decided tag from the tag set
         let decidedTag = ""
 
         // --- edited chatgpt lol ---
@@ -300,25 +313,29 @@ function processTags(tagsObject, tagSetListName) {
 
 // Returns true or false if a tag list meets the conditions of a given object with conditions
 function tagTest(tagList, conditionObject) {
-    // If nothing related to tags are included in the condition object, then return true
-    if ([conditionObject.tagsInclude, conditionObject.tagsExclude, conditionObject.tagsIncludeAll, conditionObject.tagsExcludeAll].includes(undefined)) {
-        return true
-    }
+    //console.warn(tagList)
+    //console.warn(conditionObject)
+
+    // Default values, also letting the function return true if no values are there.
+    const tagsInclude = overwriteCheck(conditionObject.tagsInclude, [])
+    const tagsExclude = overwriteCheck(conditionObject.tagsExclude, [])
+    const tagsIncludeAll = overwriteCheck(conditionObject.tagsIncludeAll, false)
+    const tagsExcludeAll = overwriteCheck(conditionObject.tagsExcludeAll, false)
 
     // Get the amount of overlap between given tag list, and the include and exclude lists
-    includeOverlap = tagList.filter(i => conditionObject.tagsInclude.includes(i)).length
-    excludeOverlap = tagList.filter(i => conditionObject.tagsExclude.includes(i)).length
+    includeOverlap = tagList.filter(i => tagsInclude.includes(i)).length
+    excludeOverlap = tagList.filter(i => tagsExclude.includes(i)).length
     
     if ((   
         // Compare with tag include list
-        conditionObject.tagsInclude.length == 0 ||
-        !conditionObject.tagsIncludeAll && includeOverlap > 0 ||
-        conditionObject.tagsIncludeAll && includeOverlap == tagList.length
+        tagsInclude.length == 0 ||
+        !tagsIncludeAll && includeOverlap > 0 ||
+        tagsIncludeAll && includeOverlap == tagList.length
     ) && (
         // Compare with tag exclude list
-        conditionObject.tagsExclude.length == 0 ||
-        !conditionObject.tagsExcludeAll && excludeOverlap == 0 ||
-        conditionObject.tagsExcludeAll && excludeOverlap < tagList.length
+        tagsExclude.length == 0 ||
+        !tagsExcludeAll && excludeOverlap == 0 ||
+        tagsExcludeAll && excludeOverlap < tagList.length
     )) {
         return true
     }
