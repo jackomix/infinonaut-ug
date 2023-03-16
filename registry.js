@@ -9,13 +9,7 @@ registry = {
   numDimensions: 10, // How many dimensions to generate
   numBiomes: [2, 5, 3, 0.75], // How many biomes to generate per dimension
   tags: {
-    dimension: {
-      coolness: {
-        notcool: { percentageChance: 75, },
-        kinda: { percentageChance: 10, },
-        cool: { percentageChance: 15, },
-      },
-    },
+    dimension: {},
     biome: {
       depth: {
         default: { percentageChance: 50, },
@@ -39,10 +33,10 @@ registry = {
       },
     },
     underwaterDepth: {
-      tagsWhitelist: ["biome/depth/underwater"],
-      tagsWhitelistAll: false,
-      tagsBlacklist: [],
-      tagsBlacklistAll: false,
+      tagsInclude: ["biome/depth/underwater"],
+      tagsIncludeAll: false,
+      tagsExclude: [],
+      tagsExcludeAll: false,
 
       depth: -1,
     },
@@ -71,10 +65,10 @@ registry = {
       selectionAmount: [1, 3, 1, 0.9], // If decided to spawn features from this category, how many should be used?
       featureStep: 9,
 
-      tagsWhitelist: [],
-      tagsWhitelistAll: false,
-      tagsBlacklist: ["biome/depth/underwater"],
-      tagsBlacklistAll: false,
+      tagsInclude: [],
+      tagsIncludeAll: false,
+      tagsExclude: ["biome/depth/underwater", "biome/noTrees/true"],
+      tagsExcludeAll: true,
 
       searchTerms: ["tree"], // Search for these terms in the feature list to dynamic add them to this category. Mainly for dynamic mod support.
       searchIgnoreTerms: [], // Ignore these features if they contain these terms, even if they come up during search.

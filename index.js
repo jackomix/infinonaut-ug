@@ -1,4 +1,4 @@
-debugMode = true
+debugMode = false
 
 // Begins universe generation. Runs when the "Generate Universe" button is hit
 function begin() {
@@ -71,6 +71,9 @@ function generateDimension(zip, nameHistory) {
     // Copy the dimension template object onto the object we'll be editing
     dimension = JSON.parse(JSON.stringify(dimensionBase))
 
+    // Change the seed of the dimension
+    dimension.generator.seed = randomNumber(-100000000, 100000000)
+
     // Generate biomes and add them to the biome_source list in the dimension object
     numBiomes = regValue(registry.numBiomes)
     for (let i = 0; i < numBiomes; i++) {
@@ -117,6 +120,9 @@ function generateBiome(zip, dimensionProperties) {
         // Define the settings object that will be used
         const settingsObj = registry.biome[settings]
 
+        // Check if tag conditions are met
+        if (!tagTest(biome.tags, settingsObj)) { continue }
+
         let dimensionPropertiesObj = settingsObj
         if (settings == "default") {
             dimensionPropertiesObj = dimensionProperties
@@ -130,16 +136,16 @@ function generateBiome(zip, dimensionProperties) {
         // but it doesn't matter as the default values are still used.
         biomeDepthEdited = overwriteCheck(settingsObj.depth, biome.depth) 
         if (settings == "default") {
-            biomeDepthEdited[2] = dimensionProperties.biomeDepthBiasInfluence
+            biomeDepthEdited[3] = dimensionProperties.biomeDepthBiasInfluence
         } else{
-            biomeDepthEdited[2] = overwriteCheck(regValue(dimensionPropertiesObj.biomeDepthBiasInfluence), dimensionProperties.biomeDepthBiasInfluence)
+            biomeDepthEdited[3] = overwriteCheck(regValue(dimensionPropertiesObj.biomeDepthBiasInfluence), dimensionProperties.biomeDepthBiasInfluence)
         }
         biome.depth = regValue(biomeDepthEdited)
 
         // Same procedure as above, but for biome scale instead.
         biomeScaleEdited = overwriteCheck(settingsObj.scale, biome.scale)
         if (settings == "default") {
-            biomeScaleEdited[2] = dimensionProperties.biomeDepthBiasInfluence
+            biomeScaleEdited[2] = dimensionProperties.biomeScaleBias
         } else{
             biomeScaleEdited[2] = overwriteCheck(regValue(dimensionPropertiesObj.biomeScaleBias), dimensionProperties.biomeScaleBias)
         }
@@ -159,14 +165,16 @@ function generateBiome(zip, dimensionProperties) {
         biome.effects.foliage_color = convertColorToMC(randomColor())
     }
 
-    // Features
-    
-    // dimensionPropertiesCategory is the array containing the category name and the chance percentage deciding in dimension gen
+    // Features 
+    // dimensionPropertiesCategory is an array containing the category name and the chance percentage deciding in dimension gen
     // Honestly not the most effiecent way to do this but, I think it's good enough.
     for (const dimensionPropertiesCategory of dimensionProperties.featureCategories) {
         const category = registry.featureCategories[dimensionPropertiesCategory[0]]
         const categoryName = dimensionPropertiesCategory[0]
         const categoryDimensionBasedChance = dimensionPropertiesCategory[1]
+
+        // Check if tag conditions are met
+        if (!tagTest(biome.tags, category)) { continue }
 
         // Ignore blacklist
         if (categoryName == "blacklist") { continue }
@@ -292,5 +300,27 @@ function processTags(tagsObject, tagSetListName) {
 
 // Returns true or false if a tag list meets the conditions of a given object with conditions
 function tagTest(tagList, conditionObject) {
+    // If nothing related to tags are included in the condition object, then return true
+    if ([conditionObject.tagsInclude, conditionObject.tagsExclude, conditionObject.tagsIncludeAll, conditionObject.tagsExcludeAll].includes(undefined)) {
+        return true
+    }
+
+    // Get the amount of overlap between given tag list, and the include and exclude lists
+    includeOverlap = tagList.filter(i => conditionObject.tagsInclude.includes(i)).length
+    excludeOverlap = tagList.filter(i => conditionObject.tagsExclude.includes(i)).length
+    
+    if ((   
+        // Compare with tag include list
+        conditionObject.tagsInclude.length == 0 ||
+        !conditionObject.tagsIncludeAll && includeOverlap > 0 ||
+        conditionObject.tagsIncludeAll && includeOverlap == tagList.length
+    ) && (
+        // Compare with tag exclude list
+        conditionObject.tagsExclude.length == 0 ||
+        !conditionObject.tagsExcludeAll && excludeOverlap == 0 ||
+        conditionObject.tagsExcludeAll && excludeOverlap < tagList.length
+    )) {
+        return true
+    }
     return false
 }
