@@ -1,4 +1,4 @@
-debugMode = true
+debugMode = false
 
 // Begins universe generation. Runs when the "Generate Universe" button is hit
 function begin() {
