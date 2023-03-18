@@ -26,7 +26,7 @@ underwater
 registry = {
   namespace: "infinonaut", // Namespace used in datapack. Like the "minecraft" in "minecraft:overworld"
   numDimensions: 10, // How many dimensions to generate
-  numBiomes: [2, 5, 3, 0.75], // How many biomes to generate per dimension
+  numBiomes: [2, 6, 4, 0.75], // How many biomes to generate per dimension
   tags: {
     dimension: {
       waterLevel: {
@@ -96,6 +96,9 @@ registry = {
         "minecraft:birch",
         "minecraft:spruce",
         "minecraft:pine",
+        "minecraft:mega_jungle_tree",
+        "minecraft:mega_pine",
+        "minecraft:mega_spruce",
 
         "minecraft:birch_other",
         "minecraft:spruce_snowy",
@@ -120,13 +123,13 @@ registry = {
     },
     misc: {
       // This category represents any features that weren't added to a category.
-      percentageChanceOfSpawning: [10, 100, 75, 0.6], // Applied to all biomes within one dimension, what are the chances that this feature category will spawn?
+      percentageChanceOfSpawning: [10, 100, 75, 0.75], // Applied to all biomes within one dimension, what are the chances that this feature category will spawn?
       selectionAmount: [1, 6, 3, 0.8], // If decided to spawn features from this category, how many should be used?
       featureStep: 8,
     },
 
     groundClusters: {
-      percentageChanceOfSpawning: [1, 70, 20, 0.85], // Applied to all biomes within one dimension, what are the chances that this feature category will spawn?
+      percentageChanceOfSpawning: [1, 70, 70, 0.85], // Applied to all biomes within one dimension, what are the chances that this feature category will spawn?
       selectionAmount: [1, 3, 1, 0.85], // If decided to spawn features from this category, how many should be used?
       featureStep: 7,
 
@@ -207,7 +210,7 @@ registry = {
       ],
     },
     foliage: {
-      percentageChanceOfSpawning: [1, 90, 60, 0.80], // Applied to all biomes within one dimension, what are the chances that this feature category will spawn?
+      percentageChanceOfSpawning: [1, 90, 90, 0.75], // Applied to all biomes within one dimension, what are the chances that this feature category will spawn?
       selectionAmount: [1, 3, 1, 0.85], // If decided to spawn features from this category, how many should be used?
       featureStep: 9,
 
@@ -236,8 +239,8 @@ registry = {
       ],
     },
     foliageExotic: {
-      percentageChanceOfSpawning: [1, 70, 20, 0.9], // Applied to all biomes within one dimension, what are the chances that this feature category will spawn?
-      selectionAmount: [1, 2, 1, 0.8], // If decided to spawn features from this category, how many should be used?
+      percentageChanceOfSpawning: [1, 70, 50, 0.9], // Applied to all biomes within one dimension, what are the chances that this feature category will spawn?
+      selectionAmount: [1, 3, 2, 0.8], // If decided to spawn features from this category, how many should be used?
       featureStep: 9,
 
       tagsExclude: ["biome/depth/underwater", "biome/depthIslands/underwater"],
