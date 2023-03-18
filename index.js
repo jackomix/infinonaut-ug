@@ -231,7 +231,7 @@ function processCategories(database, categories) {
         for (const item of mutableDatabase) {
             for (const searchTerm of category.searchTerms) {
                 if (item.includes(searchTerm)) {
-                    searchResults.push(feature)
+                    searchResults.push(item)
                 } 
             }
         }
