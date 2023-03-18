@@ -226,10 +226,15 @@ function processCategories(database, categories) {
         // Copy the category object to this variable for readability
         const category = categories[categoryName]
 
+        const specific = overwriteCheck(category.specific, [])
+        const searchTerms = overwriteCheck(category.searchTerms, [])
+        const searchIgnoreTerms = overwriteCheck(category.searchIgnoreTerms, [])
+        const searchIgnoreSpecific = overwriteCheck(category.searchIgnoreSpecific, [])
+
         // Get search of results of search terms
         let searchResults = []
         for (const item of mutableDatabase) {
-            for (const searchTerm of category.searchTerms) {
+            for (const searchTerm of searchTerms) {
                 if (item.includes(searchTerm)) {
                     searchResults.push(item)
                 } 
@@ -238,7 +243,7 @@ function processCategories(database, categories) {
 
         // Remove search results containing search ignore terms
         for (const item of searchResults) {
-            for (const searchIgnoreTerm of category.searchIgnoreTerms) {
+            for (const searchIgnoreTerm of searchIgnoreTerms) {
                 if (item.includes(searchIgnoreTerm)) {
                     searchResults = searchResults.filter(item => item !== item)
                 } 
@@ -246,12 +251,12 @@ function processCategories(database, categories) {
         }
 
         // Remove specific items mentioned in searchIgnoreSpecific
-        searchResults = searchResults.filter((el) => !category.searchIgnoreSpecific.includes(el))
+        searchResults = searchResults.filter((el) => !searchIgnoreSpecific.includes(el))
         // Remove items already in the categories' specified items list
-        searchResults = searchResults.filter((el) => !category.specific.includes(el))
+        searchResults = searchResults.filter((el) => !specific.includes(el))
 
         // Combine both search results and specific items mentioned to form the categories' final items list.
-        category.items = [].concat(category.specific, searchResults)
+        category.items = [].concat(specific, searchResults)
         
         // Remove items that we added to categories from the general mutableDatabase
         mutableDatabase = mutableDatabase.filter((el) => !category.items.includes(el))
