@@ -55,7 +55,7 @@ function generateDimension(zip, nameHistory) {
     // Generate a base color for sky color, then set it to the sky and fog color. We also increase the brightness for the fog color.
     baseSkyColor = randomColor()
     dimensionProperties.skyColor = convertColorToMC(baseSkyColor)
-    dimensionProperties.fogColor = convertColorToMC(changeBrightness(0.35, baseSkyColor))
+    dimensionProperties.fogColor = convertColorToMC(changeBrightness(randomNumber(0.05, 0.5, 2), baseSkyColor)) //original brightness increase: 0.35
     // Do the same for water
     baseWaterColor = randomColor()
     dimensionProperties.waterColor = convertColorToMC(baseWaterColor)
