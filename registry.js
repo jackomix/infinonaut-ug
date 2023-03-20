@@ -210,8 +210,8 @@ registry = {
       ],
     },
     foliage: {
-      percentageChanceOfSpawning: [25, 100, 90, 0.9], // Applied to all biomes within one dimension, what are the chances that this feature category will spawn?
-      selectionAmount: [1, 3, 2, 0.7], // If decided to spawn features from this category, how many should be used?
+      percentageChanceOfSpawning: [75, 100, 90, 0.9], // Applied to all biomes within one dimension, what are the chances that this feature category will spawn?
+      selectionAmount: [1, 3, 2, 0.8], // If decided to spawn features from this category, how many should be used?
       featureStep: 9,
 
       tagsExclude: ["biome/depth/underwater", "biome/depthIslands/underwater"],

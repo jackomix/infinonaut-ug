@@ -258,8 +258,10 @@ function processCategories(database, categories) {
         // Combine both search results and specific items mentioned to form the categories' final items list.
         category.items = [].concat(specific, searchResults)
         
-        // Remove items that we added to categories from the general mutableDatabase
-        mutableDatabase = mutableDatabase.filter((el) => !category.items.includes(el))
+        // Remove items that we added to categories from the general mutableDatabase, unless said not to by the category
+        if (category.keepItemsInDatabase !== true) {
+            mutableDatabase = mutableDatabase.filter((el) => !category.items.includes(el))
+        }
     }
 
     // Add everything else to the misc category
