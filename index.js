@@ -180,7 +180,7 @@ function generateBiome(zip, dimensionProperties) {
         if (categoryName == "blacklist") { continue }
 
         // Randomize a percentage and check if the dimension-based category chance wins
-        if (categoryDimensionBasedChance <= randomNumber(0, 100)) {
+        if (randomNumber(0, 100) <= categoryDimensionBasedChance) {
             // Make a mutable list of the categories' items and check how many to take form that list
             const mutableItemList = category.items
             const howManyItemsToTake = regValue(category.selectionAmount)
@@ -210,11 +210,13 @@ function generateBiome(zip, dimensionProperties) {
 // Process arrays into their respective categories set in the registry
 function processCategories(database, categories) {
     // Define our mutableDatabase array that we will manipulate
-    mutableDatabase = database
+    let mutableDatabase = [].concat(database)
 
     // Remove features from mutableDatabase that are specified in categories (including blacklist)
     for (const categoryName in categories) {
+        // Ignore the misc category.
         if (categoryName == "misc") { continue }
+
         mutableDatabase = mutableDatabase.filter((el) => !categories[categoryName].specific.includes(el))
     }
 
@@ -245,8 +247,9 @@ function processCategories(database, categories) {
         for (const item of searchResults) {
             for (const searchIgnoreTerm of searchIgnoreTerms) {
                 if (item.includes(searchIgnoreTerm)) {
-                    searchResults = searchResults.filter(item => item !== item)
-                } 
+                    //searchResults = searchResults.filter(item => item !== item)
+                    searchResults.splice(searchResults.indexOf(item), 1)
+                }
             }
         }
 
